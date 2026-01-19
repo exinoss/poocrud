@@ -1,0 +1,18 @@
+body {
+  min-height: 100vh;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.btn-group-sm > .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+}
