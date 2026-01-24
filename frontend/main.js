@@ -1,6 +1,8 @@
-const API_URL = "https://localhost:7178/api/clientes";
+const API_URL = "https://localhost:7178/api/Clientes";
+const CITIES_API_URL = "https://countriesnow.space/api/v0.1/countries/cities";
 
 let modalCliente, modalEliminar, toast;
+let ciudadesEcuador = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   modalCliente = new bootstrap.Modal(document.getElementById("modalCliente"));
@@ -8,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   toast = new bootstrap.Toast(document.getElementById("toast"));
 
   cargarClientes();
+  cargarCiudades();
   initEventListeners();
 });
 
@@ -30,6 +33,38 @@ function initEventListeners() {
       document.getElementById("inputBuscar").value = "";
       cargarClientes();
     });
+}
+
+async function cargarCiudades() {
+  const selectCiudad = document.getElementById("ciudad");
+  try {
+    const response = await fetch(CITIES_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ country: "ecuador" }),
+    });
+
+    if (!response.ok) throw new Error("Error al cargar ciudades");
+
+    const data = await response.json();
+
+    if (data.error === false && data.data) {
+      ciudadesEcuador = data.data.sort();
+      selectCiudad.innerHTML = '<option value="">Seleccione una ciudad...</option>';
+      ciudadesEcuador.forEach((ciudad) => {
+        const option = document.createElement("option");
+        option.value = ciudad;
+        option.textContent = ciudad;
+        selectCiudad.appendChild(option);
+      });
+    } else {
+      throw new Error("No se encontraron ciudades");
+    }
+  } catch (error) {
+    console.error("Error cargando ciudades:", error);
+    selectCiudad.innerHTML = '<option value="">Error al cargar ciudades</option>';
+    mostrarToast("Advertencia", "No se pudieron cargar las ciudades", "warning");
+  }
 }
 
 async function cargarClientes() {
@@ -67,7 +102,7 @@ function renderizarTabla(clientes) {
   if (clientes.length === 0) {
     tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="text-center py-4 text-muted">
+                <td colspan="11" class="text-center py-4 text-muted">
                     <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                     No hay clientes registrados
                 </td>
@@ -80,10 +115,14 @@ function renderizarTabla(clientes) {
         <tr>
             <td>${c.id}</td>
             <td>${c.nombres}</td>
-            <td>${c.cedula}</td>
+            <td>${c.tipoDocumento}</td>
+            <td>${c.documento}</td>
             <td>${c.direccion}</td>
+            <td>${c.ciudad}</td>
             <td>${c.email}</td>
             <td>${c.telf}</td>
+            <td>${formatearFecha(c.fechaNacimiento)}</td>
+            <td><span class="badge ${c.estado === 'Activo' ? 'bg-success' : 'bg-secondary'}">${c.estado}</span></td>
             <td class="text-center">
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-primary" onclick="abrirModalEditar(${c.id})">
@@ -98,6 +137,12 @@ function renderizarTabla(clientes) {
     `,
     )
     .join("");
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return '';
+  const date = new Date(fecha);
+  return date.toLocaleDateString('es-ES');
 }
 
 function abrirModalNuevo() {
@@ -116,10 +161,14 @@ async function abrirModalEditar(id) {
 
     document.getElementById("clienteId").value = cliente.id;
     document.getElementById("nombres").value = cliente.nombres;
-    document.getElementById("cedula").value = cliente.cedula;
+    document.getElementById("tipoDocumento").value = cliente.tipoDocumento;
+    document.getElementById("documento").value = cliente.documento;
     document.getElementById("direccion").value = cliente.direccion;
+    document.getElementById("ciudad").value = cliente.ciudad;
     document.getElementById("email").value = cliente.email;
     document.getElementById("telf").value = cliente.telf;
+    document.getElementById("fechaNacimiento").value = cliente.fechaNacimiento ? cliente.fechaNacimiento.split('T')[0] : '';
+    document.getElementById("estado").value = cliente.estado;
     document.getElementById("modalClienteTitulo").innerHTML =
       '<i class="bi bi-pencil me-2"></i>Editar Cliente';
     modalCliente.show();
@@ -138,10 +187,14 @@ async function guardarCliente() {
   const id = document.getElementById("clienteId").value;
   const cliente = {
     nombres: document.getElementById("nombres").value,
-    cedula: document.getElementById("cedula").value,
+    tipoDocumento: document.getElementById("tipoDocumento").value,
+    documento: document.getElementById("documento").value,
     direccion: document.getElementById("direccion").value,
+    ciudad: document.getElementById("ciudad").value,
     email: document.getElementById("email").value,
     telf: document.getElementById("telf").value,
+    fechaNacimiento: document.getElementById("fechaNacimiento").value,
+    estado: document.getElementById("estado").value,
   };
 
   try {

@@ -20,10 +20,15 @@ namespace poocrud.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Nombres).HasColumnName("nombres").HasColumnType("nvarchar(100)");
-                entity.Property(e => e.Cedula).HasColumnName("cedula").HasColumnType("nvarchar(10)");
+                entity.Property(e => e.TipoDocumento).HasColumnName("tipo_documento").HasColumnType("nvarchar(20)");
+                entity.Property(e => e.Documento).HasColumnName("documento").HasColumnType("nvarchar(13)");
                 entity.Property(e => e.Direccion).HasColumnName("direccion").HasColumnType("varchar(200)");
+                entity.Property(e => e.Ciudad).HasColumnName("ciudad").HasColumnType("nvarchar(100)");
                 entity.Property(e => e.Email).HasColumnName("email").HasColumnType("varchar(200)");
-                entity.Property(e => e.Telf).HasColumnName("telf").HasColumnType("varchar(10)");
+                entity.Property(e => e.Telf).HasColumnName("telf").HasColumnType("varchar(15)");
+                entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento").HasColumnType("date");
+                entity.Property(e => e.Estado).HasColumnName("estado").HasColumnType("nvarchar(20)").HasDefaultValue("Activo");
+                entity.Property(e => e.CreadoEn).HasColumnName("creado_en").HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
             });
         }
     }

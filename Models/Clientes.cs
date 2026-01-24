@@ -14,12 +14,20 @@ namespace poocrud.Models
         public string Nombres { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(10)]
-        public string Cedula { get; set; } = string.Empty;
+        [StringLength(20)]
+        public string TipoDocumento { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(20)]
+        public string Documento { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
         public string Direccion { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100)]
+        public string Ciudad { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
@@ -27,7 +35,16 @@ namespace poocrud.Models
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(10)]
+        [StringLength(15)]
         public string Telf { get; set; } = string.Empty;
+
+        [Required]
+        public DateTime FechaNacimiento { get; set; }
+
+        [Required]
+        [StringLength(20)]
+        public string Estado { get; set; } = "Activo";
+
+        public DateTime CreadoEn { get; set; } = DateTime.Now;
     }
 }

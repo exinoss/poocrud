@@ -37,7 +37,7 @@
                   type="text"
                   class="form-control"
                   id="inputBuscar"
-                  placeholder="Buscar por nombre o cedula..."
+                  placeholder="Buscar por nombre o documento..."
                 />
                 <button
                   class="btn btn-outline-secondary"
@@ -74,16 +74,20 @@
                 <tr>
                   <th>ID</th>
                   <th>Nombres</th>
-                  <th>Cedula</th>
+                  <th>Tipo Doc.</th>
+                  <th>Documento</th>
                   <th>Direccion</th>
+                  <th>Ciudad</th>
                   <th>Email</th>
                   <th>Telefono</th>
+                  <th>Fecha Nac.</th>
+                  <th>Estado</th>
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody id="tablaClientes">
                 <tr>
-                  <td colspan="7" class="text-center py-4">
+                  <td colspan="11" class="text-center py-4">
                     <div class="spinner-border text-primary" role="status">
                       <span class="visually-hidden">Cargando...</span>
                     </div>
@@ -98,7 +102,7 @@
 
     <!-- Modal Formulario Cliente -->
     <div class="modal fade" id="modalCliente" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
             <h5 class="modal-title" id="modalClienteTitulo">
@@ -117,26 +121,79 @@
                 <label for="nombres" class="form-label">Nombres</label>
                 <input type="text" class="form-control" id="nombres" required />
               </div>
-              <div class="mb-3">
-                <label for="cedula" class="form-label">Cedula</label>
-                <input type="text" class="form-control" id="cedula" required />
+              <div class="row">
+                <div class="col-md-5 mb-3">
+                  <label for="tipoDocumento" class="form-label"
+                    >Tipo Documento</label
+                  >
+                  <select class="form-select" id="tipoDocumento" required>
+                    <option value="">Seleccione...</option>
+                    <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="CE">Cédula de Extranjería</option>
+                    <option value="PP">Pasaporte</option>
+                  </select>
+                </div>
+                <div class="col-md-7 mb-3">
+                  <label for="documento" class="form-label">Documento</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="documento"
+                    required
+                  />
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="direccion" class="form-label">Direccion</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="direccion"
-                  required
-                />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="direccion" class="form-label">Direccion</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="direccion"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="ciudad" class="form-label">Ciudad</label>
+                  <select class="form-select" id="ciudad" required>
+                    <option value="">Cargando ciudades...</option>
+                  </select>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" required />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="telf" class="form-label">Telefono</label>
+                  <input type="text" class="form-control" id="telf" required />
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="telf" class="form-label">Telefono</label>
-                <input type="text" class="form-control" id="telf" required />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="fechaNacimiento" class="form-label"
+                    >Fecha de Nacimiento</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fechaNacimiento"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="estado" class="form-label">Estado</label>
+                  <select class="form-select" id="estado" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                  </select>
+                </div>
               </div>
             </form>
           </div>

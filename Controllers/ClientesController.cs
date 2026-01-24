@@ -73,13 +73,13 @@ namespace poocrud.Controllers
                     return BadRequest(ModelState);
                 }
 
-                // Verificar si ya existe un cliente con la misma cédula
+                // Verificar si ya existe un cliente con el mismo documento
                 var existeCliente = await _context.Clientes
-                    .AnyAsync(c => c.Cedula == cliente.Cedula);
+                    .AnyAsync(c => c.Documento == cliente.Documento);
 
                 if (existeCliente)
                 {
-                    return Conflict($"Ya existe un cliente con la cédula {cliente.Cedula}");
+                    return Conflict($"Ya existe un cliente con el documento {cliente.Documento}");
                 }
 
                 _context.Clientes.Add(cliente);
@@ -119,21 +119,25 @@ namespace poocrud.Controllers
                     return NotFound($"Cliente con ID {id} no encontrado");
                 }
 
-                // Verificar si la cédula ya existe en otro cliente
-                var cedulaDuplicada = await _context.Clientes
-                    .AnyAsync(c => c.Cedula == cliente.Cedula && c.Id != id);
+                // Verificar si el documento ya existe en otro cliente
+                var documentoDuplicado = await _context.Clientes
+                    .AnyAsync(c => c.Documento == cliente.Documento && c.Id != id);
 
-                if (cedulaDuplicada)
+                if (documentoDuplicado)
                 {
-                    return Conflict($"Ya existe otro cliente con la cédula {cliente.Cedula}");
+                    return Conflict($"Ya existe otro cliente con el documento {cliente.Documento}");
                 }
 
                 // Actualizar propiedades
                 clienteExistente.Nombres = cliente.Nombres;
-                clienteExistente.Cedula = cliente.Cedula;
+                clienteExistente.TipoDocumento = cliente.TipoDocumento;
+                clienteExistente.Documento = cliente.Documento;
                 clienteExistente.Direccion = cliente.Direccion;
+                clienteExistente.Ciudad = cliente.Ciudad;
                 clienteExistente.Email = cliente.Email;
                 clienteExistente.Telf = cliente.Telf;
+                clienteExistente.FechaNacimiento = cliente.FechaNacimiento;
+                clienteExistente.Estado = cliente.Estado;
 
                 await _context.SaveChangesAsync();
 
@@ -182,7 +186,7 @@ namespace poocrud.Controllers
         }
 
         /// <summary>
-        /// Busca clientes por nombre o cédula
+        /// Busca clientes por nombre o documento
         /// </summary>
         [HttpGet("buscar")]
         public async Task<ActionResult<IEnumerable<Clientes>>> BuscarClientes([FromQuery] string? termino)
@@ -195,7 +199,7 @@ namespace poocrud.Controllers
                 }
 
                 var clientes = await _context.Clientes
-                    .Where(c => c.Nombres.Contains(termino) || c.Cedula.Contains(termino))
+                    .Where(c => c.Nombres.Contains(termino) || c.Documento.Contains(termino))
                     .ToListAsync();
 
                 return Ok(clientes);
